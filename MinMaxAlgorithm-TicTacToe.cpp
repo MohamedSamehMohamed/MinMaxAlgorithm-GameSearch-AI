@@ -45,69 +45,71 @@ void PrintWinner ()
   else
     cout <<"Draw\n";
 }
+bool RowWin(int row)
+{
+ int j = 1; 
+ while(j < BoardSize && board[row][j] == board[row][j-1] && ~board[row][j-1])
+  j++; 
+ j--;
+ if (j == BoardSize - 1)
+ {
+  SetWinner(board[row][j]);
+  return 1;
+ }
+ return 0; 
+}
+bool ColWin(int col)
+{
+ int j = 1; 
+ while(j < BoardSize && board[j][col] == board[j-1][col] && ~board[j-1][col])
+  j++; 
+ j--; 
+ if (j == BoardSize - 1)
+ {
+  SetWinner(board[j][col]); 
+  return 1; 
+ }
+ return 0; 
+}
 bool CheckRowAndCol()
 {
+ // check if row or col i is wining, 
  for (int i = 0; i < BoardSize; i++)
+  if (RowWin(i) || ColWin(i)) 
+   return 1; 
+ return 0; 
+}
+bool CheckPrimaryDiagonal()
+{
+ int i = 1; 
+ while(i < BoardSize && board[i][i] == board[i-1][i-1] && ~board[i-1][i-1])
+  i++; 
+ i--; 
+ if (i == BoardSize-1)
  {
-  // check if row i is wining
-  for (int j = 0; j < BoardSize; j++)
-  {
-   if (board[i][j] == -1)break;
-   j++;
-   while(j < BoardSize && board[i][j] == board[i][j-1])j++;
-    if (j != BoardSize)break;
-     j--;
-     SetWinner(board[i][j]);
-     return 1;
-  }
-  // check if col i is wining 
-  for (int j = 0; j < BoardSize; j++)
-  {
-   if (board[j][i] == -1)break;
-   j++;
-   while(j < BoardSize && board[j][i] == board[j-1][i])j++;
-   if (j != BoardSize)break;
-   j--;
-   SetWinner(board[j][i]);
-   return 1;
-  }
+  SetWinner(board[i][i]);
+  return 1; 
+ }
+ return 0; 
+}
+bool CheckOtherDiagonal()
+{
+ int i = 1, j = BoardSize - 2; 
+ while(i < BoardSize && board[i][j] == board[i-1][j+1] && ~board[i-1][j+1])
+  j--, i++; 
+ j++;
+ i--;
+ if (i == BoardSize - 1)
+ {
+  SetWinner(board[i][j]); 
+  return 1; 
  }
  return 0; 
 }
 bool CheckTheDiagonals()
 {
- // check the diagonal 
- for (int i = 0; i < BoardSize; i++)
- {
-  if (board[i][i] == -1)break;
-  i++;
-  while (i < BoardSize && board[i][i] == board[i-1][i-1])i++;
-  if (i != BoardSize)break;
-  i--;
-  SetWinner(board[i][i]);
-  return 1;
- }
- // check the other diagonal 
- for (int i = 0 , j = BoardSize-1; ;)
- {
-  if (board[i][j] == -1)break;
-  i++;
-  j--;
-  while(i < BoardSize && board[i][j] == board[i - 1][j + 1])
-  {
-   j--;
-   i++;
-  }
-  j++;
-  i--;
-  if (i == BoardSize - 1)
-  {
-   SetWinner(board[i][j]);
-   return 1;
-  }
-  break;
- }
- return 0; 
+ // check the two diagonals 
+ return (CheckPrimaryDiagonal() || CheckOtherDiagonal()); 
 }
 bool EndState()
 {
