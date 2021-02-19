@@ -1,6 +1,5 @@
 // Author : Mohamed Sameh
 /*
-
 0 -> O
 1 -> X
 the game start with O
